@@ -40,7 +40,7 @@ def main():
         print(f"\nMatch: {title}")
         sys.exit(0)
 
-    print(f"No matches found in {str(MAX_ATTEMPTS * 10)} pages.")
+    print(f"\nNo matches found in {str(MAX_ATTEMPTS * 10)} pages.")
     sys.exit(1)
 
 
@@ -58,6 +58,7 @@ def searchForTMNT(ATTEMPTS=100, BACKOFF=2):
         sys.stdout.flush()
         return False
 
+    sys.stdout.flush()
     print(f"\rAttempts remaining: {str(ATTEMPTS)}", end="")
     maybeValidTitle = checkTenPagesForTMNT()
 
