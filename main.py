@@ -5,6 +5,7 @@ import tweepy
 import wikipedia
 
 from collections import namedtuple
+from selenium import webdriver
 
 # TODO:
 #   - Docstrings
@@ -31,8 +32,8 @@ TWITTER = TwitterAuth(
 
 
 def main():
-    MAX_ATTEMPTS = 100
-    BACKOFF = 2
+    MAX_ATTEMPTS = 1000
+    BACKOFF = 1
 
     title = searchForTMNT(MAX_ATTEMPTS, BACKOFF)
 
@@ -44,7 +45,7 @@ def main():
     sys.exit(1)
 
 
-def searchForTMNT(ATTEMPTS=100, BACKOFF=2):
+def searchForTMNT(ATTEMPTS=100, BACKOFF=1):
     """Loop MAX_ATTEMPT times, searching for a TMNT meter wikipedia title.
 
     Args:
@@ -171,7 +172,7 @@ def cleanStr(s: str):
 
     for char, replacement in SWAP_CHARS:
         if char in s:
-            s.replace(char, replacement)
+            s = s.replace(char, replacement)
 
     return s
 
@@ -194,6 +195,25 @@ def sendTweet(tweet_text: str, image_path=""):
         return api.update_with_media(tweet_text, image_path)
 
     return api.update_status(tweet_text)
+
+
+def getLogo(title):
+    title = title.replace(" ", "_")
+    scripts = (
+        "document.getElementsByTagName('P')[0].style.visibility = 'hidden'",
+        "document.getElementById('logo-text').style.visibility = 'hidden'",
+        # driver.execute_script("document.getElementById('share').style.visibility = 'hidden'"),
+    )
+
+    driver = webdriver.Chrome("/usr/local/bin/chromedriver")
+    driver.set_window_size(800, 600)
+    driver.get(f"http://glench.com/tmnt/#{title}")
+
+    for script in scripts:
+        driver.execute_script(script)
+
+    driver.save_screenshot(f"{title}.png")
+    driver.quit()
 
 
 if __name__ == "__main__":
