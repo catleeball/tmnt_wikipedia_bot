@@ -119,7 +119,8 @@ def cleanStr(s: str):
             s = s.replace(char, "")
 
     for char, replacement in SWAP_CHARS:
-        s.replace(char, replacement)
+        if char in s:
+            s.replace(char, replacement)
 
     return s
 
