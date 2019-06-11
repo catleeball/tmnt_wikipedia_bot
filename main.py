@@ -1,7 +1,10 @@
 import pronouncing
 import sys
 import time
+import tweepy
 import wikipedia
+
+from collections import namedtuple
 
 # TODO:
 #   - Docstrings
@@ -13,6 +16,18 @@ import wikipedia
 # Super bonus points:
 #   - CI
 #   - Mastodon
+
+TwitterAuth = namedtuple(
+    "TWITTER",
+    ["consumer_key", "consumer_secret", "access_token", "access_token_secret"],
+)
+
+TWITTER = TwitterAuth(
+    consumer_key="xxx",
+    consumer_secret="yyy",
+    access_token="aaa",
+    access_token_secret="bbb",
+)
 
 
 def main():
@@ -123,6 +138,26 @@ def cleanStr(s: str):
             s.replace(char, replacement)
 
     return s
+
+
+def sendTweet(tweet_text: str, image_path=""):
+    """Post some text, and optionally an image to twitter.
+
+    Params:
+        tweet_text: String, text to post to twitter, must be less than 260 chars
+        image_path: String, path to image on disk to be posted to twitter
+    Returns:
+        tweepy.status object, contains response from twitter request
+    """
+    auth = tweepy.OAuthHandler(TWITTER.consumer_key, TWITTER.consumer_secret)
+    auth.set_access_token(TWITTER.access_token, TWITTER.access_token_secret)
+
+    api = tweepy.API(auth)
+
+    if image_path:
+        return api.update_with_media(tweet_text, image_path)
+
+    return api.update_status(tweet_text)
 
 
 if __name__ == "__main__":
