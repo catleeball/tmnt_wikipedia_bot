@@ -12,6 +12,8 @@ import wikipedia
 #   - Tests
 # Super bonus points:
 #   - CI
+#   - Mastodon
+
 
 def main():
     ATTEMPTS = 100
@@ -36,10 +38,17 @@ def checkPages():
 
 
 def isTMNT(title: str):
-    # '12', # Teenage
-    # '10', # Mutant
-    # '10', # Ninja
-    # '10', # Turtles
+    """Checks if a Wikipedia page title has the same stress pattern as TMNT.
+
+    >>> isTMNT('Teenage Mutant Ninja Turtles')
+    True
+
+    >>> isTMNT('Single Payer Health Insurance')
+    True
+
+    >>> isTMNT('Romeo, Romeo, wherefore art thou, Romeo?')
+    False
+    """
     TMNT_STRESSES = ("12101010", "11101010", "10101010")
 
     title = cleanStr(title)
@@ -55,6 +64,16 @@ def isTMNT(title: str):
 
 
 def getTitleStresses(title: str):
+    """Takes a wikipedia title and gets the combined stresses of all words.
+
+    >>> getTitleStresses('Teenage Mutant Ninja Turtles')
+    '12101010'
+
+    Args:
+        title: String, title of a wikipedia page.
+    Returns:
+        String, stresses of each syllable as 0, 1, and 2s.
+    """
     title_words = title.split()
     title_stresses = ""
     for word in title_words:
@@ -78,12 +97,21 @@ def cleanStr(s: str):
 
     This isn't very efficient, but it's readable at least. :-)
 
+    >>> cleanStr('fooBar123')
+    'fooBar123'
+
+    >>> cleanStr('Hello ([world])')
+    'Hello world'
+
+    >>> cleanStr('{hello-world}')
+    'hello world'
+
     Args:
         s: String to be stripped of offending characters
     Returns:
         String without offending characters
     """
-    DEL_CHARS = ["(", ")", "[", "]", "{", "}"]
+    DEL_CHARS = ["(", ")", "[", "]", "{", "}", ","]
     SWAP_CHARS = [("-", " ")]
 
     for char in DEL_CHARS:
