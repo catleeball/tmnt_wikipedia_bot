@@ -11,8 +11,8 @@ from collections import namedtuple
 #   - README
 #   - CLI arguments
 #   - Image generator
-#   - Twitter linkup
-#   - Tests
+#   - Get twitter credentials from somewhere not inline with the code
+#   - More tests
 # Super bonus points:
 #   - CI
 #   - Mastodon
@@ -31,25 +31,60 @@ TWITTER = TwitterAuth(
 
 
 def main():
-    ATTEMPTS = 100
+    MAX_ATTEMPTS = 100
     BACKOFF = 2
 
-    for i in range(ATTEMPTS):
-        print(f"\rAttempt: {str(i)} / {str(ATTEMPTS)}", end="")
-        checkPages()
-        time.sleep(BACKOFF)
+    title = searchForTMNT(MAX_ATTEMPTS, BACKOFF)
 
-    print(f"No matches found in {str(ATTEMPTS * 10)} pages.")
+    if title:
+        print(f"\nMatch: {title}")
+        sys.exit(0)
+
+    print(f"No matches found in {str(MAX_ATTEMPTS * 10)} pages.")
     sys.exit(1)
 
 
-def checkPages():
+def searchForTMNT(ATTEMPTS=100, BACKOFF=2):
+    """Loop MAX_ATTEMPT times, searching for a TMNT meter wikipedia title.
+
+    Args:
+        Integer: ATTEMPTS, retries remaining.
+        Integer: BACKOFF, seconds to wait between each loop.
+    Returns:
+        String or False: String of wikipedia title in TMNT meter, or False if
+                         none found.
+    """
+    if ATTEMPTS <= 0:
+        sys.stdout.flush()
+        return False
+
+    print(f"\rAttempts remaining: {str(ATTEMPTS)}", end="")
+    maybeValidTitle = checkTenPagesForTMNT()
+
+    if maybeValidTitle:
+        sys.stdout.flush()
+        return maybeValidTitle
+    else:
+        time.sleep(BACKOFF)
+        searchForTMNT(ATTEMPTS - 1, BACKOFF)
+
+
+def checkTenPagesForTMNT():
+    """Get 10 random wiki titles, check if any of them isTMNT().
+
+    We grab the max allowed Wikipedia page titles (10) using wikipedia.random().
+    If any title is in TMNT meter, return the title. Otherwise, return False.
+
+    Args:
+        None
+    Returns:
+        String or False: The TMNT compliant title, or False if none found.
+    """
     titles = wikipedia.random(10)
     for title in titles:
         if isTMNT(title):
-            sys.stdout.flush()
-            print(f"\nMatch: {title}")
-            sys.exit(0)
+            return title
+    return False
 
 
 def isTMNT(title: str):
@@ -143,7 +178,7 @@ def cleanStr(s: str):
 def sendTweet(tweet_text: str, image_path=""):
     """Post some text, and optionally an image to twitter.
 
-    Params:
+    Args:
         tweet_text: String, text to post to twitter, must be less than 260 chars
         image_path: String, path to image on disk to be posted to twitter
     Returns:
