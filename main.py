@@ -1,3 +1,4 @@
+import os
 import pronouncing
 import sys
 import time
@@ -12,9 +13,10 @@ from selenium import webdriver
 #   - Docstrings
 #   - README
 #   - CLI arguments
-#   - Image generator
-#   - Get twitter credentials from somewhere not inline with the code
-#   - More tests
+#   - use real file format for keys
+#   - Integration tests
+#   - more unit tests
+#   - actually enable option to run doctests
 # Super bonus points:
 #   - CI
 #   - Mastodon
@@ -24,13 +26,6 @@ TwitterAuth = namedtuple(
     ["consumer_key", "consumer_secret", "access_token", "access_token_secret"],
 )
 
-TWITTER = TwitterAuth(
-    consumer_key="xxx",
-    consumer_secret="yyy",
-    access_token="aaa",
-    access_token_secret="bbb",
-)
-
 
 def main():
     MAX_ATTEMPTS = 1000
@@ -38,12 +33,25 @@ def main():
 
     title = searchForTMNT(MAX_ATTEMPTS, BACKOFF)
 
-    if title:
-        print(f"\nMatch: {title}")
-        sys.exit(0)
+    if not title:
+        print(f"\nNo matches found in {str(MAX_ATTEMPTS * 10)} pages.")
+        sys.exit(1)
+        
+    print(f"\nMatch: {title}")
+    logo = getLogo(title)
 
-    print(f"\nNo matches found in {str(MAX_ATTEMPTS * 10)} pages.")
-    sys.exit(1)
+    # Make sure there's actually a logo to post
+    try:
+        logo_size = os.path.getsize(logo)
+    except OSError:
+        sys.stderr.write(f"Logo doesn't exist or isn't accessible. File {logo}")
+    if logo_size and logo_size > 1000:
+        tweet_status = sendTweet(title, logo)
+    else:
+        tweet_status = sendTweet(title)
+
+    print(tweet_status)
+    sys.exit(0)
 
 
 def searchForTMNT(ATTEMPTS=100, BACKOFF=1):
@@ -164,7 +172,7 @@ def cleanStr(s: str):
     Returns:
         String without offending characters
     """
-    DEL_CHARS = ["(", ")", "[", "]", "{", "}", ","]
+    DEL_CHARS = ["(", ")", "[", "]", "{", "}", ",", ":", ";"]
     SWAP_CHARS = [("-", " ")]
 
     for char in DEL_CHARS:
@@ -178,6 +186,26 @@ def cleanStr(s: str):
     return s
 
 
+def getTwitterCredentials(keyfile=".keys"):
+    # TOODO: Use better config file format, better parsing logic
+    try:
+        with open(keyfile, 'r') as f:
+            keys = f.read()
+    except Exception as e:
+        sys.stderr.write(f"Exception fetching Twitter keys: {e}")
+        sys.exit(1)
+    
+    keys = keys.split()
+    keys = [key.strip() for key in keys]
+    
+    return TwitterAuth(
+        consumer_key=keys[0],
+        consumer_secret=keys[1],
+        access_token=keys[2],
+        access_token_secret=keys[3],
+    )
+
+
 def sendTweet(tweet_text: str, image_path=""):
     """Post some text, and optionally an image to twitter.
 
@@ -187,6 +215,7 @@ def sendTweet(tweet_text: str, image_path=""):
     Returns:
         tweepy.status object, contains response from twitter request
     """
+    TWITTER = getTwitterCredentials()
     auth = tweepy.OAuthHandler(TWITTER.consumer_key, TWITTER.consumer_secret)
     auth.set_access_token(TWITTER.access_token, TWITTER.access_token_secret)
 
@@ -213,8 +242,11 @@ def getLogo(title):
     for script in scripts:
         driver.execute_script(script)
 
-    driver.save_screenshot(f"logos/{title}.png")
+    logo_path = f"logos/{title}.png"
+    driver.save_screenshot(logo_path)
+    cropLogo(logo_path)
     driver.quit()
+    return logo_path
 
 
 def trimWhitespace(im):
