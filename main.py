@@ -57,7 +57,6 @@ def searchForTMNT(ATTEMPTS=1000, BACKOFF=1):
         String or False: String of wikipedia title in TMNT meter, or False if
                          none found.
     """
-    return "Edward Collins (figure skater)"
     # Recursion? KISS!
     for ATTEMPT in range(ATTEMPTS):
         print(f"\r{str(ATTEMPT)} attempts remaining...", end="")
@@ -248,7 +247,7 @@ def getLogo(title: str):
     for script in scripts:
         driver.execute_script(script)
 
-    logo_path = "logo.png"
+    logo_path = "/tmp/logo.png"
     driver.save_screenshot(logo_path)
     time.sleep(1)
     cropLogo(logo_path)
