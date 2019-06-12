@@ -10,7 +10,7 @@ from PIL import Image, ImageChops
 from selenium import webdriver
 
 # TODO:
-#   - Docstrings
+#   - More docstrings
 #   - README
 #   - CLI arguments
 #   - use real file format for keys
@@ -32,29 +32,22 @@ def main():
     BACKOFF = 1
 
     title = searchForTMNT(MAX_ATTEMPTS, BACKOFF)
-
-    if not title:
-        print(f"\nNo matches found in {str(MAX_ATTEMPTS * 10)} pages.")
-        sys.exit(1)
-        
-    print(f"\nMatch: {title}")
     logo = getLogo(title)
 
-    # Make sure there's actually a logo to post
     try:
-        logo_size = os.path.getsize(logo)
-    except OSError:
-        sys.stderr.write(f"Logo doesn't exist or isn't accessible. File {logo}")
-    if logo_size and logo_size > 1000:
         tweet_status = sendTweet(title, logo)
-    else:
-        tweet_status = sendTweet(title)
+    except OSError as e:
+        sys.stderr.write(f"Unable to read logo file {logo}. Error: {e}")
+        sys.exit(1)
+    except Exception as e:
+        sys.stderr.write(f"Error: {e}")
+        sys.exit(1)
 
-    print(tweet_status)
+    #print(tweet_status)
     sys.exit(0)
 
 
-def searchForTMNT(ATTEMPTS=100, BACKOFF=1):
+def searchForTMNT(ATTEMPTS=1000, BACKOFF=1):
     """Loop MAX_ATTEMPT times, searching for a TMNT meter wikipedia title.
 
     Args:
@@ -64,20 +57,21 @@ def searchForTMNT(ATTEMPTS=100, BACKOFF=1):
         String or False: String of wikipedia title in TMNT meter, or False if
                          none found.
     """
-    if ATTEMPTS <= 0:
+    return "Edward Collins (figure skater)"
+    # Recursion? KISS!
+    for ATTEMPT in range(ATTEMPTS):
+        print(f"\r{str(ATTEMPT)} attempts remaining...", end="")
         sys.stdout.flush()
-        return False
+        maybeValidTitle = checkTenPagesForTMNT()
 
-    sys.stdout.flush()
-    print(f"\rAttempts remaining: {str(ATTEMPTS)}", end="")
-    maybeValidTitle = checkTenPagesForTMNT()
+        if type(maybeValidTitle) == str and len(maybeValidTitle) > 1:
+            print(f"\nMatched: {maybeValidTitle}")
+            return maybeValidTitle
 
-    if maybeValidTitle:
-        sys.stdout.flush()
-        return maybeValidTitle
-    else:
         time.sleep(BACKOFF)
-        searchForTMNT(ATTEMPTS - 1, BACKOFF)
+
+    print(f"\nNo matches found.")
+    sys.exit(1)
 
 
 def checkTenPagesForTMNT():
@@ -91,7 +85,16 @@ def checkTenPagesForTMNT():
     Returns:
         String or False: The TMNT compliant title, or False if none found.
     """
-    titles = wikipedia.random(10)
+    wikipedia.set_rate_limiting(True)
+    try:
+        titles = wikipedia.random(10)
+    except wikipedia.exceptions.HTTPTimeoutError as e:
+        print(f"Wikipedia timout exception: {e}")
+    except wikipedia.exceptions.WikipediaException as e:
+        print(f"Wikipedia exception: {e}")
+    except Exception as e:
+        print(f"Exception while fetching wiki titles: {e}")
+
     for title in titles:
         if isTMNT(title):
             return title
@@ -189,15 +192,15 @@ def cleanStr(s: str):
 def getTwitterCredentials(keyfile=".keys"):
     # TOODO: Use better config file format, better parsing logic
     try:
-        with open(keyfile, 'r') as f:
+        with open(keyfile, "r") as f:
             keys = f.read()
     except Exception as e:
         sys.stderr.write(f"Exception fetching Twitter keys: {e}")
         sys.exit(1)
-    
+
     keys = keys.split()
     keys = [key.strip() for key in keys]
-    
+
     return TwitterAuth(
         consumer_key=keys[0],
         consumer_secret=keys[1],
@@ -206,7 +209,7 @@ def getTwitterCredentials(keyfile=".keys"):
     )
 
 
-def sendTweet(tweet_text: str, image_path=""):
+def sendTweet(tweet_text: str, image_path="/tmp/logo.png"):
     """Post some text, and optionally an image to twitter.
 
     Args:
@@ -222,12 +225,15 @@ def sendTweet(tweet_text: str, image_path=""):
     api = tweepy.API(auth)
 
     if image_path:
-        return api.update_with_media(tweet_text, image_path)
+        return api.update_with_media(
+            filename=image_path, status=tweet_text)
+    else:
+        return api.update_status(tweet_text)
 
     return api.update_status(tweet_text)
 
 
-def getLogo(title):
+def getLogo(title: str):
     title = title.replace(" ", "_")
     scripts = (
         "document.getElementsByTagName('P')[0].style.visibility = 'hidden'",
@@ -242,10 +248,13 @@ def getLogo(title):
     for script in scripts:
         driver.execute_script(script)
 
-    logo_path = f"logos/{title}.png"
+    logo_path = "logo.png"
     driver.save_screenshot(logo_path)
+    time.sleep(1)
     cropLogo(logo_path)
+    time.sleep(1)
     driver.quit()
+    time.sleep(3)
     return logo_path
 
 
@@ -263,7 +272,7 @@ def cropBottom20px(im):
     return im.crop((0, 0, w, h - 20))
 
 
-def cropLogo(image_path):
+def cropLogo(image_path: str):
     im = Image.open(image_path)
     im = trimWhitespace(im)
     im = cropBottom20px(im)
