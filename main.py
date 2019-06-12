@@ -5,6 +5,7 @@ import tweepy
 import wikipedia
 
 from collections import namedtuple
+from PIL import Image, ImageChops
 from selenium import webdriver
 
 # TODO:
@@ -202,7 +203,7 @@ def getLogo(title):
     scripts = (
         "document.getElementsByTagName('P')[0].style.visibility = 'hidden'",
         "document.getElementById('logo-text').style.visibility = 'hidden'",
-        # driver.execute_script("document.getElementById('share').style.visibility = 'hidden'"),
+        # "driver.execute_script("document.getElementById('share').style.visibility = 'hidden'",
     )
 
     driver = webdriver.Chrome("/usr/local/bin/chromedriver")
@@ -214,6 +215,28 @@ def getLogo(title):
 
     driver.save_screenshot(f"logos/{title}.png")
     driver.quit()
+
+
+def trimWhitespace(im):
+    bg = Image.new(im.mode, im.size, im.getpixel((0, 0)))
+    diff = ImageChops.difference(im, bg)
+    diff = ImageChops.add(diff, diff, 2.0, -100)
+    bbox = diff.getbbox()
+    if bbox:
+        return im.crop(bbox)
+
+
+def cropBottom20px(im):
+    w, h = im.size
+    return im.crop((0, 0, w, h - 20))
+
+
+def cropLogo(image_path):
+    im = Image.open(image_path)
+    im = trimWhitespace(im)
+    im = cropBottom20px(im)
+    im = trimWhitespace(im)
+    im.save(image_path)
 
 
 if __name__ == "__main__":
