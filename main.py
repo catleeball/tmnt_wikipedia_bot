@@ -212,7 +212,7 @@ def getLogo(title):
     for script in scripts:
         driver.execute_script(script)
 
-    driver.save_screenshot(f"{title}.png")
+    driver.save_screenshot(f"logos/{title}.png")
     driver.quit()
 
 
