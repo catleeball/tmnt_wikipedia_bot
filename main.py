@@ -6,10 +6,12 @@ import tweepy
 import wikipedia
 
 from collections import namedtuple
+from num2words import num2words as n2w
 from PIL import Image, ImageChops
 from selenium import webdriver
 
 # TODO:
+#   - Drop titles with words unknown to CMU rather than countin them as 0 stress
 #   - More docstrings
 #   - README
 #   - CLI arguments
@@ -20,6 +22,8 @@ from selenium import webdriver
 # Super bonus points:
 #   - CI
 #   - Mastodon
+#   - archive posts locally
+#   - cache of titles : stresses
 
 TwitterAuth = namedtuple(
     "TWITTER",
@@ -43,7 +47,7 @@ def main():
         sys.stderr.write(f"Error: {e}")
         sys.exit(1)
 
-    #print(tweet_status)
+    # print(tweet_status)
     sys.exit(0)
 
 
@@ -59,13 +63,13 @@ def searchForTMNT(ATTEMPTS=1000, BACKOFF=1):
     """
     # Recursion? KISS!
     for ATTEMPT in range(ATTEMPTS):
-        print(f"\r{str(ATTEMPT)} attempts remaining...", end="")
+        print(f"\r{str(ATTEMPT * 10)} articles fetched...", end="")
         sys.stdout.flush()
-        maybeValidTitle = checkTenPagesForTMNT()
+        title = checkTenPagesForTMNT()
 
-        if type(maybeValidTitle) == str and len(maybeValidTitle) > 1:
-            print(f"\nMatched: {maybeValidTitle}")
-            return maybeValidTitle
+        if type(title) == str and len(title) > 1:
+            print(f"\nMatched: {title}")
+            return title
 
         time.sleep(BACKOFF)
 
@@ -139,20 +143,57 @@ def getTitleStresses(title: str):
     """
     title_words = title.split()
     title_stresses = ""
-    for word in title_words:
-        title_stresses += getWordStresses(word)
+    while title_words:
         if len(title_stresses) > 8:
             return None
+        word = title_words.pop(0)
+        word_stresses = getWordStresses(word)
+        # If word was a long number, it may have been parsed into several words.
+        if isinstance(word_stresses, list):
+            title_words = word_stresses + title_words
+        else:
+            title_stresses += getWordStresses(word)
+
     return title_stresses
 
 
 def getWordStresses(word: str):
+    word = numbersToWords(word)
+    if " " in word:
+        return word.split()
     try:
         phones = pronouncing.phones_for_word(word)
         stresses = pronouncing.stresses(phones[0])
     except IndexError:
-        return ""
+        # Hacky way of discarding candidate title
+        return "1111111111"
     return stresses
+
+
+def numbersToWords(word):
+    ordinal_number_endings = ("nd", "rd", "st", "th")
+    if word.isdigit():
+        if len(word) == 4:
+            try:
+                word = n2w(word, to="year")
+            except Exception:
+                # Hacky way of discarding candidate title
+                return "1111111111"
+        else:
+            try:
+                word = n2w(word)
+            except Exception:
+                # Hacky way of discarding candidate title
+                return "1111111111"
+    if word[:-2].isdigit() and word[-2:] in ordinal_number_endings:
+        word = word[-2:]
+        try:
+            word = n2w(word, to="ordinal")
+        except Exception:
+            # Hacky way of discarding candidate title
+            return "1111111111"
+
+    return word
 
 
 def cleanStr(s: str):
@@ -174,16 +215,14 @@ def cleanStr(s: str):
     Returns:
         String without offending characters
     """
-    DEL_CHARS = ["(", ")", "[", "]", "{", "}", ",", ":", ";"]
+    DEL_CHARS = ["(", ")", "[", "]", "{", "}", ",", ":", ";", "."]
     SWAP_CHARS = [("-", " ")]
 
     for char in DEL_CHARS:
-        if char in s:
-            s = s.replace(char, "")
+        s = s.replace(char, "")
 
     for char, replacement in SWAP_CHARS:
-        if char in s:
-            s = s.replace(char, replacement)
+        s = s.replace(char, replacement)
 
     return s
 
@@ -224,8 +263,7 @@ def sendTweet(tweet_text: str, image_path="/tmp/logo.png"):
     api = tweepy.API(auth)
 
     if image_path:
-        return api.update_with_media(
-            filename=image_path, status=tweet_text)
+        return api.update_with_media(filename=image_path, status=tweet_text)
     else:
         return api.update_status(tweet_text)
 
@@ -241,7 +279,7 @@ def getLogo(title: str):
     )
 
     driver = webdriver.Chrome("/usr/local/bin/chromedriver")
-    driver.set_window_size(800, 600)
+    # driver.set_window_size(800, 600)
     driver.get(f"http://glench.com/tmnt/#{title}")
 
     for script in scripts:
@@ -249,11 +287,8 @@ def getLogo(title: str):
 
     logo_path = "/tmp/logo.png"
     driver.save_screenshot(logo_path)
-    time.sleep(1)
     cropLogo(logo_path)
-    time.sleep(1)
     driver.quit()
-    time.sleep(3)
     return logo_path
 
 
