@@ -1,5 +1,6 @@
 import os
 import pronouncing
+import subprocess
 import sys
 import time
 import tweepy
@@ -8,8 +9,6 @@ import wikipedia
 from collections import namedtuple
 from num2words import num2words as n2w
 from PIL import Image, ImageChops
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 
 # TODO:
 #   - Drop titles with words unknown to CMU rather than countin them as 0 stress
@@ -272,30 +271,25 @@ def sendTweet(tweet_text: str, image_path="/tmp/logo.png"):
 
 
 def getLogo(title: str):
-    title = title.replace(" ", "_")
-    scripts = (
-        "document.getElementsByTagName('P')[0].style.visibility = 'hidden'",
-        "document.getElementById('logo-text').style.visibility = 'hidden'",
-        # "driver.execute_script("document.getElementById('share').style.visibility = 'hidden'",
+    title = title.replace(" ", "_")    
+
+    chrome_cmd = (
+        "google-chrome-beta "
+        "--headless "
+        "--disable-gpu "
+        "--screenshot "
+        "--window-size=1280,600 "
+        f"http://glench.com/tmnt/#{title}"
     )
 
-    chrome_options = Options()
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(
-        "/usr/local/bin/chromedriver",
-        chrome_options=chrome_options)
-    # driver.set_window_size(800, 600)
-    driver.get(f"http://glench.com/tmnt/#{title}")
+    retcode = subprocess.run(chrome_cmd, shell=True).returncode
+    if retcode != 0:
+        sys.stderr.write("Chrome subprocess exited with code 1")
+        sys.exit(1)
 
-    for script in scripts:
-        driver.execute_script(script)
-
-    logo_path = "/tmp/logo.png"
-    driver.save_screenshot(logo_path)
-    cropLogo(logo_path)
-    driver.quit()
-    return logo_path
+    screesnhot_path = "screenshot.png" # in script's pwd
+    cropLogo(screesnhot_path)
+    return "logo.png"
 
 
 def trimWhitespace(im):
@@ -307,17 +301,16 @@ def trimWhitespace(im):
         return im.crop(bbox)
 
 
-def cropBottom20px(im):
-    w, h = im.size
-    return im.crop((0, 0, w, h - 20))
-
-
-def cropLogo(image_path: str):
+def cropOffTopAndBottom(image_path: str):
     im = Image.open(image_path)
+    w, h = im.size
+    return im.crop((0, 175, w, h - 100))
+
+
+def cropLogo(im):
+    im = cropOffTopAndBottom(im)
     im = trimWhitespace(im)
-    im = cropBottom20px(im)
-    im = trimWhitespace(im)
-    im.save(image_path)
+    im.save("logo.png")
 
 
 if __name__ == "__main__":
