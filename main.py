@@ -279,7 +279,7 @@ def getLogo(title: str):
         "--disable-gpu "
         "--screenshot "
         "--window-size=1280,600 "
-        f"http://glench.com/tmnt/#{title}"
+        f'"http://glench.com/tmnt/#{title}"'
     )
 
     retcode = subprocess.run(chrome_cmd, shell=True).returncode
@@ -287,7 +287,7 @@ def getLogo(title: str):
         sys.stderr.write("Chrome subprocess exited with code 1")
         sys.exit(1)
 
-    screesnhot_path = "screenshot.png"  # in script's pwd
+    screesnhot_path = "screenshot.png"
     logo_path = cropLogo(screesnhot_path)
     return logo_path
 
