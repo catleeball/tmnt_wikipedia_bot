@@ -9,6 +9,7 @@ from collections import namedtuple
 from num2words import num2words as n2w
 from PIL import Image, ImageChops
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 # TODO:
 #   - Drop titles with words unknown to CMU rather than countin them as 0 stress
@@ -278,7 +279,12 @@ def getLogo(title: str):
         # "driver.execute_script("document.getElementById('share').style.visibility = 'hidden'",
     )
 
-    driver = webdriver.Chrome("/usr/local/bin/chromedriver")
+    chrome_options = Options()
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(
+        "/usr/local/bin/chromedriver",
+        chrome_options=chrome_options)
     # driver.set_window_size(800, 600)
     driver.get(f"http://glench.com/tmnt/#{title}")
 
