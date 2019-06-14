@@ -227,7 +227,7 @@ def cleanStr(s: str):
     return s
 
 
-def getTwitterCredentials(keyfile=".keys"):
+def getTwitterCredentials(keyfile="/home/cat/src/wiki-turtles/.keys"):
     # TOODO: Use better config file format, better parsing logic
     try:
         with open(keyfile, "r") as f:
@@ -247,7 +247,7 @@ def getTwitterCredentials(keyfile=".keys"):
     )
 
 
-def sendTweet(tweet_text: str, image_path="/tmp/logo.png"):
+def sendTweet(tweet_text: str, image_path=""):
     """Post some text, and optionally an image to twitter.
 
     Args:
@@ -288,8 +288,8 @@ def getLogo(title: str):
         sys.exit(1)
 
     screesnhot_path = "screenshot.png" # in script's pwd
-    cropLogo(screesnhot_path)
-    return "logo.png"
+    logo_path = cropLogo(screesnhot_path)
+    return logo_path
 
 
 def trimWhitespace(im):
@@ -308,9 +308,11 @@ def cropOffTopAndBottom(image_path: str):
 
 
 def cropLogo(im):
+    logo_path = "/tmp/logo.png"
     im = cropOffTopAndBottom(im)
     im = trimWhitespace(im)
-    im.save("logo.png")
+    im.save(logo_path)
+    return logo_path
 
 
 if __name__ == "__main__":
