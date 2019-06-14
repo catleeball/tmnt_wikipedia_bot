@@ -271,7 +271,7 @@ def sendTweet(tweet_text: str, image_path=""):
 
 
 def getLogo(title: str):
-    title = title.replace(" ", "_")    
+    title = title.replace(" ", "_")
 
     chrome_cmd = (
         "google-chrome-beta "
@@ -287,7 +287,7 @@ def getLogo(title: str):
         sys.stderr.write("Chrome subprocess exited with code 1")
         sys.exit(1)
 
-    screesnhot_path = "screenshot.png" # in script's pwd
+    screesnhot_path = "screenshot.png"  # in script's pwd
     logo_path = cropLogo(screesnhot_path)
     return logo_path
 
