@@ -8,7 +8,6 @@ from lib import twitter
 from lib import words
 
 # TODO:
-#   - Drop titles with words unknown to CMU rather than countin them as 0 stress
 #   - More docstrings
 #   - README
 #   - CLI arguments
@@ -28,9 +27,10 @@ def main():
     MAX_ATTEMPTS = 1000
     BACKOFF = 1
     LOGO_PATH = "/tmp/logo.png"
+    CHROME_PATH = "google-chrome-beta"
 
     title = searchForTMNT(MAX_ATTEMPTS, BACKOFF)
-    logo = images.getLogo(title, LOGO_PATH)
+    logo = images.getLogo(title, LOGO_PATH, CHROME_PATH)
 
     try:
         tweet_status = twitter.sendTweet(title, logo)

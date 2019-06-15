@@ -4,11 +4,12 @@ import sys
 from PIL import Image, ImageChops
 
 
-def getLogo(title: str, logo_path="/tmp/logo.png"):
+def getLogo(title: str, logo_path="/tmp/logo.png", chrome="google-chrome-beta"):
     title = title.replace(" ", "_")
 
+    # TODO: Generate logo locally, stop hitting glench.com (sorry glench)
     chrome_cmd = (
-        "google-chrome-beta "
+        f"{chrome} "
         "--headless "
         "--disable-gpu "
         "--screenshot "
