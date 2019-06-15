@@ -7,21 +7,6 @@ from lib import images
 from lib import twitter
 from lib import words
 
-# TODO:
-#   - More docstrings
-#   - README
-#   - CLI arguments
-#   - use real file format for keys
-#   - Integration tests
-#   - more unit tests
-#   - actually enable option to run doctests
-# Super bonus points:
-#   - CI
-#   - Mastodon
-#   - zipapp release
-#   - archive posts locally
-#   - cache of titles : stresses
-
 
 def main():
     MAX_ATTEMPTS = 1000
