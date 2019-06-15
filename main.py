@@ -93,10 +93,14 @@ def checkTenPagesForTMNT():
         titles = wikipedia.random(10)
     except wikipedia.exceptions.HTTPTimeoutError as e:
         print(f"Wikipedia timout exception: {e}")
+        time.sleep(120)
+        main()
     except wikipedia.exceptions.WikipediaException as e:
         print(f"Wikipedia exception: {e}")
+        sys.exit(1)
     except Exception as e:
         print(f"Exception while fetching wiki titles: {e}")
+        sys.exit(1)
 
     for title in titles:
         if isTMNT(title):
