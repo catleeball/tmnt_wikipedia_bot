@@ -4,7 +4,7 @@ import sys
 from PIL import Image, ImageChops
 
 
-def getLogo(title: str):
+def getLogo(title: str, logo_path="/tmp/logo.png"):
     title = title.replace(" ", "_")
 
     chrome_cmd = (

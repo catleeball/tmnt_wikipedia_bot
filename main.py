@@ -19,6 +19,7 @@ from lib import words
 # Super bonus points:
 #   - CI
 #   - Mastodon
+#   - zipapp release
 #   - archive posts locally
 #   - cache of titles : stresses
 
@@ -26,9 +27,10 @@ from lib import words
 def main():
     MAX_ATTEMPTS = 1000
     BACKOFF = 1
+    LOGO_PATH = "/tmp/logo.png"
 
     title = searchForTMNT(MAX_ATTEMPTS, BACKOFF)
-    logo = images.getLogo(title)
+    logo = images.getLogo(title, LOGO_PATH)
 
     try:
         tweet_status = twitter.sendTweet(title, logo)
