@@ -4,6 +4,7 @@ import time
 import wikipedia
 
 from lib import images
+from lib import mastodon
 from lib import twitter
 from lib import words
 
@@ -19,14 +20,13 @@ def main():
 
     try:
         tweet_status = twitter.sendTweet(title, logo)
-    except OSError as e:
-        sys.stderr.write(f"Unable to read logo file {logo}. Error: {e}")
-        sys.exit(1)
+        toot_status = mastodon.sendToot(title, logo)
     except Exception as e:
         sys.stderr.write(f"Error: {e}")
         sys.exit(1)
 
     # print(tweet_status)
+    # print(toot_status)
     sys.exit(0)
 
 

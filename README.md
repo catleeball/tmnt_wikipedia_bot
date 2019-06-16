@@ -41,10 +41,12 @@ TODO:
   - README
   - CLI arguments
   - use real file format for keys
+  - refactor key fetching to be done once
   - Integration tests
   - more unit tests
   - actually enable option to run doctests
   - Run glench.com/tmnt locally
+
 Super bonus points:
   - CI
   - Mastodon
