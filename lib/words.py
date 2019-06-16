@@ -16,7 +16,7 @@ def isTMNT(title: str):
     >>> isTMNT('Romeo, Romeo, wherefore art thou, Romeo?')
     False
     """
-    TMNT_STRESSES = ("12101010", "11101010", "10101010")
+    TMNT_STRESSES = ("12101010", "10101010") # Turns out 11101010 isn't trochaic tetrameter
 
     title = cleanStr(title)
     title_stresses = getTitleStresses(title)
