@@ -47,7 +47,6 @@ def sendToot(toot_text: str, image_path=""):
     api = getMastodonCredentials(keyfile="/home/cat/src/wiki-turtles/.keys")
     if api:
         media_id = api.media_post(image_path)["id"]
-        print(media_id)
         return api.status_post(
             status=toot_text,
             media_ids=[media_id],
