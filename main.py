@@ -11,16 +11,21 @@ from lib import words
 
 def main():
     MAX_ATTEMPTS = 1000
+    MAX_STATUS_LEN = 280
     BACKOFF = 1
     LOGO_PATH = "/tmp/logo.png"
     CHROME_PATH = "google-chrome-beta"
 
     title = searchForTMNT(MAX_ATTEMPTS, BACKOFF)
     logo = images.getLogo(title, LOGO_PATH, CHROME_PATH)
+    status_text = "\n".join((title, words.getWikiUrl(title)))
+
+    if len(status_text) > MAX_STATUS_LEN:
+        status_text = title
 
     try:
-        tweet_status = twitter.sendTweet(title, logo)
-        toot_status = mastodon.sendToot(title, logo)
+        tweet_status = twitter.sendTweet(status_text, logo)
+        toot_status = mastodon.sendToot(status_text, logo)
     except Exception as e:
         sys.stderr.write(f"Error: {e}")
         sys.exit(1)

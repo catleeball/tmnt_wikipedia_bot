@@ -1,4 +1,5 @@
 import pronouncing
+import urllib
 
 from num2words import num2words as n2w
 
@@ -124,3 +125,9 @@ def cleanStr(s: str):
         s = s.replace(char, replacement)
 
     return s
+
+
+def getWikiUrl(title: str):
+    title = title.replace(" ", "_")
+    title = urllib.parse.quote_plus(title)
+    return ("https://en.wikipedia.org/wiki/" + title)
