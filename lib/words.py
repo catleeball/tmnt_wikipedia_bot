@@ -23,7 +23,7 @@ def isTMNT(title: str):
     )  # Turns out 11101010 isn't trochaic tetrameter
 
     for phrase in BANNED:
-        if phrase in title:
+        if phrase in title.lower():
             return False
 
     title = cleanStr(title)
