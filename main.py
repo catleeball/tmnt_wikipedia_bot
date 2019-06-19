@@ -3,6 +3,7 @@ import sys
 import time
 import wikipedia
 
+from lib.constants import BACKOFF, MAX_ATTEMPTS, MAX_STATUS_LEN, TIMEOUT_BACKOFF
 from lib import images
 from lib import mastodon
 from lib import twitter
@@ -10,14 +11,8 @@ from lib import words
 
 
 def main():
-    MAX_ATTEMPTS = 1000
-    MAX_STATUS_LEN = 280
-    BACKOFF = 1
-    LOGO_PATH = "/tmp/logo.png"
-    CHROME_PATH = "google-chrome-beta"
-
     title = searchForTMNT(MAX_ATTEMPTS, BACKOFF)
-    logo = images.getLogo(title, LOGO_PATH, CHROME_PATH)
+    logo = images.getLogo(title)
     status_text = "\n".join((title, words.getWikiUrl(title)))
 
     if len(status_text) > MAX_STATUS_LEN:
@@ -35,18 +30,18 @@ def main():
     sys.exit(0)
 
 
-def searchForTMNT(ATTEMPTS=1000, BACKOFF=1):
+def searchForTMNT(attempts=MAX_ATTEMPTS, backoff=BACKOFF):
     """Loop MAX_ATTEMPT times, searching for a TMNT meter wikipedia title.
 
     Args:
-        Integer: ATTEMPTS, retries remaining.
-        Integer: BACKOFF, seconds to wait between each loop.
+        Integer: attempts, retries remaining.
+        Integer: backoff, seconds to wait between each loop.
     Returns:
         String or False: String of wikipedia title in TMNT meter, or False if
                          none found.
     """
-    for ATTEMPT in range(ATTEMPTS):
-        print(f"\r{str(ATTEMPT * 10)} articles fetched...", end="")
+    for attempt in range(attempts):
+        print(f"\r{str(attempt * 10)} articles fetched...", end="")
         sys.stdout.flush()
         title = checkTenPagesForTMNT()
 
@@ -54,7 +49,7 @@ def searchForTMNT(ATTEMPTS=1000, BACKOFF=1):
             print(f"\nMatched: {title}")
             return title
 
-        time.sleep(BACKOFF)
+        time.sleep(backoff)
 
     print(f"\nNo matches found.")
     sys.exit(1)
@@ -76,7 +71,7 @@ def checkTenPagesForTMNT():
         titles = wikipedia.random(10)
     except wikipedia.exceptions.HTTPTimeoutError as e:
         print(f"Wikipedia timout exception: {e}")
-        time.sleep(120)
+        time.sleep(TIMEOUT_BACKOFF)
         main()
     except wikipedia.exceptions.WikipediaException as e:
         print(f"Wikipedia exception: {e}")

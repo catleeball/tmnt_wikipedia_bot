@@ -1,10 +1,12 @@
 import subprocess
 import sys
 
+from lib.constants import LOGO_PATH
+from lib.constants import CHROME_PATH
 from PIL import Image, ImageChops
 
 
-def getLogo(title: str, logo_path="/tmp/logo.png", chrome="google-chrome-beta"):
+def getLogo(title: str, chrome=CHROME_PATH):
     title = title.replace(" ", "_")
 
     # TODO: Generate logo locally, stop hitting glench.com (sorry glench)
@@ -43,7 +45,7 @@ def _cropOffTopAndBottom(image_path: str):
 
 
 def _cropLogo(im):
-    logo_path = "/tmp/logo.png"
+    logo_path = LOGO_PATH
     im = _cropOffTopAndBottom(im)
     im = _trimWhitespace(im)
     im.save(logo_path)

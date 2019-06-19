@@ -1,6 +1,7 @@
 import pronouncing
 import urllib
 
+from lib.constants import BANNED
 from num2words import num2words as n2w
 
 
@@ -16,7 +17,14 @@ def isTMNT(title: str):
     >>> isTMNT('Romeo, Romeo, wherefore art thou, Romeo?')
     False
     """
-    TMNT_STRESSES = ("12101010", "10101010") # Turns out 11101010 isn't trochaic tetrameter
+    TMNT_STRESSES = (
+        "12101010",
+        "10101010",
+    )  # Turns out 11101010 isn't trochaic tetrameter
+
+    for phrase in BANNED:
+        if phrase in title:
+            return False
 
     title = cleanStr(title)
     title_stresses = getTitleStresses(title)
@@ -130,4 +138,4 @@ def cleanStr(s: str):
 def getWikiUrl(title: str):
     title = title.replace(" ", "_")
     title = urllib.parse.quote_plus(title)
-    return ("https://en.wikipedia.org/wiki/" + title)
+    return "https://en.wikipedia.org/wiki/" + title

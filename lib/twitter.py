@@ -2,7 +2,7 @@ import sys
 import tweepy
 
 from collections import namedtuple
-
+from lib.constants import KEY_PATH
 
 TwitterAuth = namedtuple(
     "TWITTER",
@@ -10,7 +10,7 @@ TwitterAuth = namedtuple(
 )
 
 
-def getTwitterCredentials(keyfile="/home/cat/src/wiki-turtles/.keys"):
+def getTwitterCredentials(keyfile=KEY_PATH):
     # TOODO: Use better config file format, better parsing logic
     try:
         with open(keyfile, "r") as f:
