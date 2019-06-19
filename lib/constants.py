@@ -9,4 +9,4 @@ LOGO_PATH = "/tmp/logo.png"
 CHROME_PATH = "google-chrome-beta"
 KEY_PATH = "/home/cat/src/wiki-turtles/.keys"
 # Article titles the contain strings in BANNED_WORDS are skipped.
-BANNED = ["rugby union", "historic district"]
+BANNED = ["rugby union", "historic district", "rape"]
