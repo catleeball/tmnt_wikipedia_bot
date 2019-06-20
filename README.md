@@ -30,6 +30,10 @@ This script requires the following:
 
 For @wiki_tmnt it runs on a cron job on my local machine.
 
+### Configuration
+
+I haven't defined a config file format yet, it's in the TODO list below. Common config knobs are currently mostly in `lib/constants.py`.
+
 ### Caveats
 
 I'm not developing this for anyone but myself, so you may see some anti-patterns like hardcoded paths specific to my environment, and general lack of configurability outside editing the source.
