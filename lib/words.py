@@ -20,7 +20,7 @@ def isTMNT(title: str):
     TMNT_STRESSES = (
         "12101010",
         "10101010",
-    )  # Turns out 11101010 isn't trochaic tetrameter
+    )
 
     for phrase in BANNED:
         if phrase in title.lower():

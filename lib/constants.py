@@ -9,4 +9,6 @@ LOGO_PATH = "/tmp/logo.png"
 CHROME_PATH = "google-chrome-beta"
 KEY_PATH = "/home/cat/src/wiki-turtles/.keys"
 # Article titles the contain strings in BANNED_WORDS are skipped.
-BANNED = ["rugby union", "historic district", "rape"]
+# Banned words are things that are very inappropriate, or things
+# that are oversaturating the timeline, i.e. historic districts
+BANNED = ["rugby union", "historic district", "rape", "nazi", "victim"]
