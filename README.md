@@ -1,6 +1,6 @@
 ## TMNT Wikipedia Bot
 
-Every 15 minutes this Python script posts to https://twitter.com/wiki_tmnt and https://botsin.space/@tmnt
+Every 60 minutes this Python script posts to https://twitter.com/wiki_tmnt and https://botsin.space/@tmnt
 
 ### Why
 
