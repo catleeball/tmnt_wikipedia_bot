@@ -22,6 +22,10 @@ def isTMNT(title: str):
         "10101010",
     )
 
+    if title.count(' ') < 3:
+        # phrase needs 4 separate words to generate a logo
+        return False 
+
     for phrase in BANNED:
         if phrase in title.lower():
             return False
