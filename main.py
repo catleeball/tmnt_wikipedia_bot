@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import sys
 import time
@@ -18,12 +19,8 @@ def main():
     if len(status_text) > MAX_STATUS_LEN:
         status_text = title
 
-    try:
-        tweet_status = twitter.sendTweet(status_text, logo)
-        toot_status = mastodon.sendToot(status_text, logo)
-    except Exception as e:
-        sys.stderr.write(f"Error: {e}")
-        sys.exit(1)
+    tweet_status = twitter.sendTweet(status_text, logo)
+    toot_status = mastodon.sendToot(status_text, logo)
 
     # print(tweet_status)
     # print(toot_status)
