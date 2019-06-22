@@ -21,7 +21,7 @@ def getLogo(title: str, chrome=CHROME_PATH):
 
     retcode = subprocess.run(chrome_cmd, shell=True).returncode
     if retcode != 0:
-        sys.stderr.write("Chrome subprocess exited with code 1")
+        sys.stderr.write(f"Chrome subprocess exited with code {retcode}")
         sys.exit(1)
 
     screesnhot_path = "screenshot.png"
