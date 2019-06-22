@@ -13,17 +13,15 @@ from lib import words
 
 def main():
     title = searchForTMNT(MAX_ATTEMPTS, BACKOFF)
-    logo = images.getLogo(title)
+    logo = images.getLogo(words.addPadding(title))
     status_text = "\n".join((title, words.getWikiUrl(title)))
 
     if len(status_text) > MAX_STATUS_LEN:
         status_text = title
 
-    tweet_status = twitter.sendTweet(status_text, logo)
-    toot_status = mastodon.sendToot(status_text, logo)
+    _ = twitter.sendTweet(status_text, logo)
+    _ = mastodon.sendToot(status_text, logo)
 
-    # print(tweet_status)
-    # print(toot_status)
     sys.exit(0)
 
 

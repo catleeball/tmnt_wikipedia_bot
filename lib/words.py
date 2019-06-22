@@ -17,10 +17,7 @@ def isTMNT(title: str):
     >>> isTMNT('Romeo, Romeo, wherefore art thou, Romeo?')
     False
     """
-    TMNT_STRESSES = (
-        "12101010",
-        "10101010",
-    )
+    TMNT_STRESSES = ("12101010", "10101010")
 
     for phrase in BANNED:
         if phrase in title.lower():
@@ -139,3 +136,45 @@ def getWikiUrl(title: str):
     title = title.replace(" ", "_")
     title = urllib.parse.quote_plus(title)
     return "https://en.wikipedia.org/wiki/" + title
+
+
+def addPadding(title: str):
+    """If a title has 2 or 3 words, add extra spaces.
+
+    The logo generator only makes the 4th word in turtle font. Adding spaces
+    is a workaround to push the last word to the 4th word index, according to
+    logo generator logic.
+
+    Note that hyphenated words count separately by the logo generater.
+    I.e. "noise-reduction" is two words.
+
+    Also note if there is somehow an 8-syllable word in trochaic tetrameter,
+    then we simply return it.
+
+    >>> addPadding('Microsoft Transaction Server')
+    'Microsoft  Transaction Server'
+
+    >>> addPadding('Two Words')
+    '  Two  Words'
+
+    >>> addPadding('Teenage Mutant Ninja Turtles')
+    'Teenage Mutant Ninja Turtles'
+
+    Args:
+        title: String, a wikipedia title in-tact
+    Returns
+        String, the title now with extra spaces
+    """
+    original_title = title
+    # TODO: Make a sub-function for dealing with hyphens without replacing them.
+    title = title.replace("-", " ")
+    title_list = title.split()
+
+    if len(title_list) > 3:
+        return original_title
+    if len(title_list) == 3:
+        return title_list[0] + "  " + title_list[1] + " " + title_list[2]
+    if len(title_list) == 2:
+        return "  " + title_list[0] + "  " + title_list[1]
+    if len(title_list) < 2:
+        return original_title
