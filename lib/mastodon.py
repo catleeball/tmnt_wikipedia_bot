@@ -1,9 +1,10 @@
 import sys
 
+from lib.constants import KEY_PATH
 from mastodon import Mastodon
 
 
-def getMastodonCredentials(keyfile="/home/cat/src/wiki-turtles/.keys"):
+def getMastodonCredentials(keyfile=KEY_PATH):
     # TODO: Use better config file format, better parsing logic
     # TODO: This largely repeats the twitter.py credential logic. Make
     #       this generic for both to use to use, and only open the keyfile
@@ -12,7 +13,7 @@ def getMastodonCredentials(keyfile="/home/cat/src/wiki-turtles/.keys"):
         with open(keyfile, "r") as f:
             keys = f.read()
     except Exception as e:
-        sys.stderr.write(f"Exception fetching Twitter keys: {e}")
+        sys.stderr.write(f"Exception fetching Mastodon keys: {e}")
         sys.exit(1)
 
     keys = keys.split()
