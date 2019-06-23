@@ -11,7 +11,7 @@ For fun! Inspired by https://xkcd.com/1412/
 When it runs, it:
 - Pulls 10 random Wikipedia article titles
 - Checks if they are in trochaic tetrameter
-  - If not, pull 10 more articles ad hominum until a match is found
+  - If not, pull 10 more articles ad infinitum until a match is found
 - Create a faux-TMNT logo containing the wiki title
   - I'm using the logic at http://glench.com/tmnt to do this
 - Post the title and generated logo to @wiki_tmnt on Twitter
