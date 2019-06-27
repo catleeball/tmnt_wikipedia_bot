@@ -59,6 +59,7 @@ def _trimWhitespace(im):
 
         return outputImage
 
+
 def _cropOffTopAndBottom(image_path: str):
     im = Image.open(image_path)
     w, h = im.size

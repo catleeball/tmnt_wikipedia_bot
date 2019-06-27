@@ -11,4 +11,5 @@ KEY_PATH = "/home/cat/src/wiki-turtles/.keys"
 # Article titles the contain strings in BANNED_WORDS are skipped.
 # Banned words are things that are very inappropriate, or things
 # that are oversaturating the timeline, i.e. historic districts
-BANNED = ["rugby union", "historic district", "rape", "nazi", "victim"]
+BANNED = ("rugby union", "historic district", "rape", "nazi", "victim")
+PRONUNCIATION_OVERRIDES = (("HD", "10"), ("U.S.", "10"))

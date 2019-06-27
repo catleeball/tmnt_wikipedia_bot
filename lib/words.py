@@ -1,7 +1,7 @@
 import pronouncing
 import urllib
 
-from lib.constants import BANNED
+from lib.constants import BANNED, PRONUNCIATION_OVERRIDES
 from num2words import num2words as n2w
 
 
@@ -66,6 +66,11 @@ def getWordStresses(word: str):
     word = numbersToWords(word)
     if " " in word:
         return word.split()
+
+    for override, stresses in PRONUNCIATION_OVERRIDES:
+        if word == override:
+            return stresses
+
     try:
         phones = pronouncing.phones_for_word(word)
         stresses = pronouncing.stresses(phones[0])
