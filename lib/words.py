@@ -1,5 +1,6 @@
 import pronouncing
 import urllib
+import re
 
 from lib.constants import BANNED, PRONUNCIATION_OVERRIDES
 from num2words import num2words as n2w
@@ -19,9 +20,8 @@ def isTMNT(title: str):
     """
     TMNT_STRESSES = ("12101010", "10101010")
 
-    for phrase in BANNED:
-        if phrase in title.lower():
-            return False
+    if containsBannedWord(title):
+        return False
 
     title = cleanStr(title)
     title_stresses = getTitleStresses(title)
@@ -33,6 +33,15 @@ def isTMNT(title: str):
         return False
 
     return title_stresses in TMNT_STRESSES
+
+
+def containsBannedWord(title: str):
+    regex = re.compile("[^a-zA-Z]")
+    for word in title.split():
+        word = regex.sub("", word.lower())
+        if word in BANNED:
+            return True
+    return False
 
 
 def getTitleStresses(title: str):

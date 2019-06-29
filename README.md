@@ -38,6 +38,8 @@ I haven't defined a config file format yet, it's in the TODO list below. Common 
 
 I'm not developing this for anyone but myself, so you may see some anti-patterns like hardcoded paths specific to my environment, and general lack of configurability outside editing the source.
 
+Given this runs once per hour, I'm not very concerned about performance. I often choose slow, but readable and easy-to-implement solutions.
+
 ### TODO
 
 TODO:
