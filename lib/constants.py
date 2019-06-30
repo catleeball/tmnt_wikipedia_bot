@@ -16,3 +16,4 @@ KEY_PATH = "/home/cat/src/wiki-turtles/.keys"
 BANNED = ("rugby union", "historic district", "rape", "nazi", "victim")
 PRONUNCIATION_OVERRIDES = (("HD", "10"), ("U.S.", "10"))
 TMNT_STRESSES = re.compile(r"1[02]1[02]1[02]1[02]")
+CHARS_ONLY = re.compile("[^a-zA-Z]")
