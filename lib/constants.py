@@ -1,3 +1,5 @@
+import re
+
 # Constants for use throughout the application.
 # Someday maybe I'll use configs or CLI args. For now this is easier.
 
@@ -13,3 +15,4 @@ KEY_PATH = "/home/cat/src/wiki-turtles/.keys"
 # that are oversaturating the timeline, i.e. historic districts
 BANNED = ("rugby union", "historic district", "rape", "nazi", "victim")
 PRONUNCIATION_OVERRIDES = (("HD", "10"), ("U.S.", "10"))
+TMNT_STRESSES = re.compile(r"1[02]1[02]1[02]1[02]")

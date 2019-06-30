@@ -2,7 +2,7 @@ import pronouncing
 import urllib
 import re
 
-from lib.constants import BANNED, PRONUNCIATION_OVERRIDES
+from lib.constants import BANNED, PRONUNCIATION_OVERRIDES, TMNT_STRESSES
 from num2words import num2words as n2w
 
 
@@ -18,21 +18,16 @@ def isTMNT(title: str):
     >>> isTMNT('Romeo, Romeo, wherefore art thou, Romeo?')
     False
     """
-    TMNT_STRESSES = ("12101010", "10101010")
-
     if containsBannedWord(title):
         return False
 
     title = cleanStr(title)
     title_stresses = getTitleStresses(title)
 
-    if not title_stresses:
+    if (not title_stresses) or (len(title_stresses) != 8):
         return False
 
-    if len(title_stresses) != 8:
-        return False
-
-    return title_stresses in TMNT_STRESSES
+    return True if TMNT_STRESSES.match(title_stresses) else False
 
 
 def containsBannedWord(title: str):
