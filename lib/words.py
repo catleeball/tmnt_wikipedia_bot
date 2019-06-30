@@ -2,7 +2,7 @@ import pronouncing
 import urllib
 import re
 
-from lib.constants import BANNED, PRONUNCIATION_OVERRIDES, TMNT_STRESSES
+from lib.constants import BANNED, PRONUNCIATION_OVERRIDES, TMNT_STRESSES, CHARS_ONLY
 from num2words import num2words as n2w
 
 
@@ -31,9 +31,8 @@ def isTMNT(title: str):
 
 
 def containsBannedWord(title: str):
-    regex = re.compile("[^a-zA-Z]")
     for word in title.split():
-        word = regex.sub("", word.lower())
+        word = CHARS_ONLY.sub("", word.lower())
         if word in BANNED:
             return True
     return False
