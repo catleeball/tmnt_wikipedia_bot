@@ -2,7 +2,13 @@ import pronouncing
 import urllib
 import re
 
-from lib.constants import BANNED, PRONUNCIATION_OVERRIDES, TMNT_STRESSES, CHARS_ONLY
+from lib.constants import (
+    BANNED_WORDS,
+    BANNED_PHRASES,
+    CHARS_ONLY,
+    PRONUNCIATION_OVERRIDES,
+    TMNT_STRESSES,
+)
 from num2words import num2words as n2w
 
 
@@ -18,7 +24,7 @@ def isTMNT(title: str):
     >>> isTMNT('Romeo, Romeo, wherefore art thou, Romeo?')
     False
     """
-    if containsBannedWord(title):
+    if containsBanned(title):
         return False
 
     title = cleanStr(title)
@@ -30,12 +36,27 @@ def isTMNT(title: str):
     return True if TMNT_STRESSES.match(title_stresses) else False
 
 
-def containsBannedWord(title: str):
-    for word in title.split():
-        word = CHARS_ONLY.sub("", word.lower())
-        if word in BANNED:
-            return True
-    return False
+def containsBanned(title: str):
+    """Return True if banned words or phrases in string.
+
+    This implementation is slow, but is was fast to write and I don't care about
+    speed for this script.
+    """
+
+    def _containsBannedWord(title: str):
+        for word in title.split():
+            word = CHARS_ONLY.sub("", word.lower())
+            if word in BANNED_WORDS:
+                return True
+        return False
+
+    def _containsBannedPhrase(title: str):
+        for phrase in BANNED_PHRASES:
+            if phrase in title:
+                return True
+        return False
+
+    return _containsBannedWord(title) and _containsBannedPhrase(title)
 
 
 def getTitleStresses(title: str):
