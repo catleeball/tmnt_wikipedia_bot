@@ -52,7 +52,7 @@ def containsBanned(title: str):
 
     def _containsBannedPhrase(title: str):
         for phrase in BANNED_PHRASES:
-            if phrase in title:
+            if phrase in title.lower():
                 return True
         return False
 
