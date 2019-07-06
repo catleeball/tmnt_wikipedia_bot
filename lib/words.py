@@ -56,7 +56,7 @@ def containsBanned(title: str):
                 return True
         return False
 
-    return _containsBannedWord(title) and _containsBannedPhrase(title)
+    return _containsBannedWord(title) or _containsBannedPhrase(title)
 
 
 def getTitleStresses(title: str):
