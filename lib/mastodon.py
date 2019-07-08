@@ -42,7 +42,7 @@ def getMastodonCredentials(keyfile=KEY_PATH):
 
 
 def sendToot(toot_text: str, image_path=""):
-    api = getMastodonCredentials(keyfile="/home/cat/src/wiki-turtles/.keys")
+    api = getMastodonCredentials(keyfile=KEY_PATH)
     if api:
         media_id = api.media_post(image_path)["id"]
         return api.status_post(status=toot_text, media_ids=[media_id])

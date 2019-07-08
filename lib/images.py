@@ -1,8 +1,7 @@
 import subprocess
 import sys
 
-from lib.constants import LOGO_PATH
-from lib.constants import CHROME_PATH
+from lib.constants import LOGO_PATH, CHROME_PATH, SCREENSHOT_PATH
 from PIL import Image, ImageChops
 
 
@@ -14,7 +13,7 @@ def getLogo(title: str, chrome=CHROME_PATH):
         f"{chrome} "
         "--headless "
         "--disable-gpu "
-        "--screenshot "
+        f"--screenshot={SCREENSHOT_PATH} "
         "--window-size=1280,600 "
         f'"http://glench.com/tmnt/#{title}"'
     )
@@ -24,8 +23,7 @@ def getLogo(title: str, chrome=CHROME_PATH):
         sys.stderr.write(f"Chrome subprocess exited with code {retcode}")
         sys.exit(1)
 
-    screesnhot_path = "screenshot.png"
-    logo_path = _cropLogo(screesnhot_path)
+    logo_path = _cropLogo(SCREENSHOT_PATH)
     return logo_path
 
 

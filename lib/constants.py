@@ -5,11 +5,12 @@ import re
 
 MAX_ATTEMPTS = 1000
 MAX_STATUS_LEN = 280
-BACKOFF = 1
+BACKOFF = 0.5
 TIMEOUT_BACKOFF = 240
-LOGO_PATH = "/tmp/logo.png"
-CHROME_PATH = "google-chrome-beta"
-KEY_PATH = "/home/cat/src/wiki-turtles/.keys"
+LOGO_PATH = r'C:/Users/cathe/logo.png'
+SCREENSHOT_PATH = r'C:/Users/cathe/screenshot.png'
+CHROME_PATH = r'"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"'
+KEY_PATH = r'C:/Users/cathe/.tmnt.keys'
 # Article titles the contain strings in BANNED_WORDS are skipped.
 # Banned words are things that are very inappropriate, or things
 # that are oversaturating the timeline, i.e. historic districts
