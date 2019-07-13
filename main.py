@@ -22,8 +22,6 @@ def main():
     _ = twitter.sendTweet(status_text, logo)
     _ = mastodon.sendToot(status_text, logo)
 
-    sys.exit(0)
-
 
 def searchForTMNT(attempts=MAX_ATTEMPTS, backoff=BACKOFF):
     """Loop MAX_ATTEMPT times, searching for a TMNT meter wikipedia title.
