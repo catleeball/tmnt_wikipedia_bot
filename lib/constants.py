@@ -16,6 +16,6 @@ KEY_PATH = r'C:/Users/cathe/.tmnt.keys'
 # that are oversaturating the timeline, i.e. historic districts
 BANNED_WORDS = ("rape", "nazi", "victim")
 BANNED_PHRASES = ("rugby union", "historic district")
-PRONUNCIATION_OVERRIDES = (("HD", "10"), ("U.S.", "10"))
+PRONUNCIATION_OVERRIDES = (("HD", "10"), ("U.S.", "10"), ("Laos", "1"))
 TMNT_STRESSES = re.compile(r"1[02]1[02]1[02]1[02]")
 CHARS_ONLY = re.compile("[^a-zA-Z]")

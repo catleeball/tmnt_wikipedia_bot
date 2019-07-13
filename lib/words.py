@@ -92,7 +92,7 @@ def getWordStresses(word: str):
         return word.split()
 
     for override, stresses in PRONUNCIATION_OVERRIDES:
-        if word == override:
+        if word.lower() == override.lower():
             return stresses
 
     try:
