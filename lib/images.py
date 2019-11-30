@@ -24,6 +24,27 @@ def getLogo(title: str, chrome=CHROME_PATH):
         sys.exit(1)
 
     logo_path = _cropLogo(SCREENSHOT_PATH)
+    _ = _compressPng(logo_path)
+    return logo_path
+
+
+def _compressPng(path):
+    cmd = f"/usr/bin/zopflipng -m -y --lossy_8bit --lossy_transparent {path} {path}"
+    retcode = subprocess.run(cmd, shell=True).returncode
+    if retcode != 0:
+        sys.stderr.write(f"zopfli subprocess exited with code {retcode}")
+    return True
+
+def _convertToWebp(path):
+    cwebp_cmd = f"/usr/bin/cwebp -q 60 -mt -m 6 -af {path} -o {path}.webp"
+    retcode = subprocess.run(cwebp_cmd, shell=True).returncode
+    if retcode != 0:
+        sys.stderr.write(f"cwebp subprocess exited with code {retcode}")
+        # Not a critical error, just return the png
+        return path
+
+    logo_path = f"{path}.webp"
+    sys.stderr.write(f"path is {logo_path}")
     return logo_path
 
 
