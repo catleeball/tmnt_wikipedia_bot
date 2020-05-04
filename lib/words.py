@@ -123,7 +123,7 @@ def numbersToWords(word):
                 # Hacky way of discarding candidate title
                 return "1111111111"
     if word[:-2].isdigit() and word[-2:] in ordinal_number_endings:
-        word = word[-2:]
+        word = word[:-2]
         try:
             word = n2w(word, to="ordinal")
         except Exception:
