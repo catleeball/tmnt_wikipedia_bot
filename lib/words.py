@@ -73,7 +73,10 @@ def getTitleStresses(title: str):
     title_words = title.split()
     title_stresses = ""
     while title_words:
-        if len(title_stresses) > 8:
+        # We will check later if this title had exactly 8 stresses,
+        # but we can stop checking this title if we exceed 8 anyway.
+        # Still being in the loop at 8 stresses means there are more.
+        if len(title_stresses) >= 8:
             return None
         word = title_words.pop(0)
         word_stresses = getWordStresses(word)
@@ -120,7 +123,7 @@ def numbersToWords(word):
                 # Hacky way of discarding candidate title
                 return "1111111111"
     if word[:-2].isdigit() and word[-2:] in ordinal_number_endings:
-        word = word[-2:]
+        word = word[:-2]
         try:
             word = n2w(word, to="ordinal")
         except Exception:
