@@ -98,12 +98,12 @@ def getWordStresses(word: str):
         if word.lower() == override.lower():
             return stresses
 
-    try:
-        phones = pronouncing.phones_for_word(word)
-        stresses = pronouncing.stresses(phones[0])
-    except IndexError:
+    phones = pronouncing.phones_for_word(word)
+    if not phones:
         # Hacky way of discarding candidate title
         return "1111111111"
+    
+    stresses = pronouncing.stresses(phones[0])
     return stresses
 
 
