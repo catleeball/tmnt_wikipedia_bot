@@ -81,11 +81,6 @@ class GetWordStressesTest(unittest.TestCase):
         test_word = "Turtles"
         self.assertEqual(words.getWordStresses(test_word), "10")
 
-    def test_get_word_stresses_index_error(self):
-        """
-        """
-        pass
-
     def test_get_word_stresses_pronunciation_override(self):
         """
         For a word on the Pronunciation Override list, return the
