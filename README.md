@@ -27,12 +27,6 @@ This script requires the following:
   - num2words
   - PIL
 
-For @wiki_tmnt it runs on a cron job on a GCP free tier VM.
-
-### Configuration
-
-I haven't defined a config file format yet, it's in the TODO list below. Common config knobs are currently mostly in `lib/constants.py`.
-
 ### Caveats
 
 I'm not developing this for anyone but myself, so you may see some anti-patterns like hardcoded paths specific to my environment, and general lack of configurability outside editing the source.
@@ -42,6 +36,8 @@ Given this runs once per hour, I'm not very concerned about performance. I often
 ### TODO
 
 TODO:
+  - Re-implement screenshot
+  - local glench webpage
   - More docstrings
   - better README
   - CLI arguments
