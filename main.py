@@ -24,7 +24,7 @@ def main():
     _ = mastodon.sendToot(status_text, logo)
 
     os.remove(logo)
-    print(f"[{datetime.datetime.now()}] {title}")
+    print(f"[{datetime.now()}] {title}")
 
 
 def searchForTMNT(attempts=MAX_ATTEMPTS, backoff=BACKOFF):
