@@ -14,6 +14,7 @@ def getLogo(title: str, compress: bool = True, format_img: bool = True):
 
     if format_img:
         _cropLogo(SCREENSHOT_PATH)
+        _addBorder(SCREENSHOT_PATH)
     if compress:
         _compressPng(SCREENSHOT_PATH)
 
@@ -30,7 +31,7 @@ def _cropLogo(path=SCREENSHOT_PATH):
 def _addBorder(path=SCREENSHOT_PATH):
     # http://www.imagemagick.org/Usage/crop/#border
     # Don't exit on subprocess error, image likely still in place and undamaged.
-    cmd = f"convert {SCREENSHOT_PATH} -quiet -bordercolor White -compose Over -border 20%x10% {SCREENSHOT_PATH}"
+    cmd = f"convert {SCREENSHOT_PATH} -quiet -bordercolor #000000 -border 20%x10% +repage {SCREENSHOT_PATH}"
     retcode = subprocess.run(cmd, shell=True).returncode
     if retcode != 0:
         sys.stderr.write(f"[ERROR]: imagemagick -border exit code {retcode}")    
