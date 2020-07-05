@@ -13,6 +13,7 @@ from lib import words
 
 
 def main():
+    print(f"[{datetime.now()}] Start")
     title = searchForTMNT(MAX_ATTEMPTS, BACKOFF)
     logo = images.getLogo(words.addPadding(title))
     status_text = "\n".join((title, words.getWikiUrl(title)))
@@ -24,8 +25,7 @@ def main():
     _ = mastodon.sendToot(status_text, logo)
 
     os.remove(logo)
-    print(f"[{datetime.now()}] {title}")
-
+    print(f"[{datetime.now()}] Complete! Posted: {title}\n=====")
 
 def searchForTMNT(attempts=MAX_ATTEMPTS, backoff=BACKOFF):
     """Loop MAX_ATTEMPT times, searching for a TMNT meter wikipedia title.
