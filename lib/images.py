@@ -27,6 +27,7 @@ def _cropLogo(path=SCREENSHOT_PATH):
     retcode = subprocess.run(cmd, shell=True).returncode
     if retcode != 0:
         sys.stderr.write(f"[ERROR]: imagemagick -trim exit code {retcode}")
+        sys.stderr.flush()
 
 def _addBorder(path=SCREENSHOT_PATH):
     # http://www.imagemagick.org/Usage/crop/#border
@@ -34,7 +35,8 @@ def _addBorder(path=SCREENSHOT_PATH):
     cmd = f'convert "{SCREENSHOT_PATH}" -quiet -border 20%x10% -bordercolor white "{SCREENSHOT_PATH}"'
     retcode = subprocess.run(cmd, shell=True).returncode
     if retcode != 0:
-        sys.stderr.write(f"[ERROR]: imagemagick -border exit code {retcode}")    
+        sys.stderr.write(f"[ERROR]: imagemagick -border exit code {retcode}")
+        sys.stderr.flush()
 
 def _compressPng(path=SCREENSHOT_PATH):
     # https://github.com/google/zopfli
@@ -43,4 +45,5 @@ def _compressPng(path=SCREENSHOT_PATH):
     retcode = subprocess.run(cmd, shell=True).returncode
     if retcode != 0:
         sys.stderr.write(f"[ERROR]: zopfli exit code {retcode}")
+        sys.stderr.flush()
 
