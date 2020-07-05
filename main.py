@@ -38,12 +38,12 @@ def searchForTMNT(attempts=MAX_ATTEMPTS, backoff=BACKOFF):
                          none found.
     """
     for attempt in range(attempts):
-        print(f"\r{str(attempt * 10)} articles fetched...", end="")
+        # print(f"\r{str(attempt * 10)} articles fetched...", end="")
         sys.stdout.flush()
         title = checkTenPagesForTMNT()
 
         if type(title) == str and len(title) > 1:
-            print(f"\nMatched: {title}")
+            print(f"\nAfter {attempt * 10} pages, found match: {title}")
             return title
 
         time.sleep(backoff)
