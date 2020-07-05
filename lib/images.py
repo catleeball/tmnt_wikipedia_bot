@@ -32,7 +32,7 @@ def _cropLogo(path=SCREENSHOT_PATH):
 def _addBorder(path=SCREENSHOT_PATH):
     # http://www.imagemagick.org/Usage/crop/#border
     # Don't exit on subprocess error, image likely still in place and undamaged.
-    cmd = f'convert "{SCREENSHOT_PATH}" -quiet -bordercolor White -border 20%x10% "{SCREENSHOT_PATH}"'
+    cmd = f'convert "{SCREENSHOT_PATH}" -quiet -bordercolor White -border 20%x15% "{SCREENSHOT_PATH}"'
     retcode = subprocess.run(cmd, shell=True).returncode
     if retcode != 0:
         sys.stderr.write(f"[ERROR]: imagemagick -border exit code {retcode}")
