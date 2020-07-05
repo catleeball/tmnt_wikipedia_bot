@@ -22,10 +22,14 @@ This script requires the following:
 - Python >= 3.7
   - Earlier may work, only tested on 3.7
 - Chrome >= 57
+- WebScreenShot >= 0.2.3
+  - https://github.com/catleeball/WebScreenShot
 - Via PyPi:
   - pronouncing
   - num2words
-  - PIL
+  - tweepy
+  - Mastodon.py
+  - wikipedia
 
 ### Caveats
 
@@ -36,13 +40,12 @@ Given this runs once per hour, I'm not very concerned about performance. I often
 ### TODO
 
 TODO:
-  - Re-implement screenshot
-  - local glench webpage
+  - Complete re-write in rust for learning
+  - Use local wikipedia data dump to fetch titles offline
   - More docstrings
   - better README
   - CLI arguments
   - use real file format for keys
-  - refactor key fetching to be done once
 
 Super bonus points:
   - CI
