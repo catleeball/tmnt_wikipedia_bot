@@ -38,7 +38,7 @@ def _addBorder(path=SCREENSHOT_PATH):
 def _compressPng(path=SCREENSHOT_PATH):
     # https://github.com/google/zopfli
     # Don't exit on subprocess error, image likely still in place and undamaged.
-    cmd = f"/usr/bin/zopflipng -m -y --lossy_8bit --lossy_transparent {path} {path}"
+    cmd = f"/usr/bin/zopflipng -m -y --lossy_8bit --lossy_transparent {path} {path} &> /dev/null"
     retcode = subprocess.run(cmd, shell=True).returncode
     if retcode != 0:
         sys.stderr.write(f"[ERROR]: zopfli exit code {retcode}")

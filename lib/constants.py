@@ -12,7 +12,7 @@ TIMEOUT_BACKOFF = 240
 WSS = '/usr/local/share/tmnt/wss'
 # This is a slightly modified version of what's what http://glench.com/tmnt
 URL = 'file:///usr/local/share/tmnt/html/tmnt.html'
-SCREENSHOT_PATH = '/tmp/screenshot.png'
+SCREENSHOT_PATH = '/tmp/tmnt-logo.png'
 KEY_PATH = '/usr/local/share/tmnt/.keys'
 TMNT_STRESSES = re.compile(r"1[02]1[02]1[02]1[02]")
 CHARS_ONLY = re.compile("[^a-zA-Z]")

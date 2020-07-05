@@ -1,34 +1,6 @@
 import sys
 import tweepy
-
-from collections import namedtuple
-from lib.constants import KEY_PATH
-
-TwitterAuth = namedtuple(
-    "TWITTER",
-    ["consumer_key", "consumer_secret", "access_token", "access_token_secret"],
-)
-
-
-def getTwitterCredentials(keyfile=KEY_PATH):
-    # TOODO: Use better config file format, better parsing logic
-    try:
-        with open(keyfile, "r") as f:
-            keys = f.read()
-    except Exception as e:
-        sys.stderr.write(f"Exception fetching Twitter keys: {e}")
-        sys.exit(1)
-
-    keys = keys.split()
-    keys = [key.strip() for key in keys]
-
-    return TwitterAuth(
-        consumer_key=keys[0],
-        consumer_secret=keys[1],
-        access_token=keys[2],
-        access_token_secret=keys[3],
-    )
-
+from lib import keys as k
 
 def sendTweet(tweet_text: str, image_path=""):
     """Post some text, and optionally an image to twitter.
@@ -39,9 +11,8 @@ def sendTweet(tweet_text: str, image_path=""):
     Returns:
         tweepy.status object, contains response from twitter request
     """
-    TWITTER = getTwitterCredentials()
-    auth = tweepy.OAuthHandler(TWITTER.consumer_key, TWITTER.consumer_secret)
-    auth.set_access_token(TWITTER.access_token, TWITTER.access_token_secret)
+    auth = tweepy.OAuthHandler(k.TWITTER_CONSUMER_KEY, k.TWITTER_CONSUMER_SECRET)
+    auth.set_access_token(k.TWITTER_ACCESS_TOKEN, k.TWITTER_ACCESS_TOKEN_SECRET)
 
     api = tweepy.API(auth)
 
