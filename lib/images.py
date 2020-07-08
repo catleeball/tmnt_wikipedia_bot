@@ -6,15 +6,15 @@ def getLogo(title: str, compress: bool = True, format_img: bool = True):
     # Logo webpage interprets underscores in URL argument as spaces.
     title = title.replace(" ", "_")
 
-    wss_cmd = f'{WSS} --quiet "{URL}#{title}" {SCREENSHOT_PATH}'
+    wss_cmd = f'{WSS} --quiet --width=1200 --height=628 "{URL}#{title}" {SCREENSHOT_PATH}'
     retcode = subprocess.run(wss_cmd, shell=True).returncode
     if retcode != 0:
         sys.stderr.write(f"[ERROR]: wss exit code {retcode}")
         sys.exit(1)
 
     if format_img:
-        _cropLogo(SCREENSHOT_PATH)
-        _addBorder(SCREENSHOT_PATH)
+        # _cropLogo(SCREENSHOT_PATH)
+        # _addBorder(SCREENSHOT_PATH)
     if compress:
         _compressPng(SCREENSHOT_PATH)
 
