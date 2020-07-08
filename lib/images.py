@@ -2,7 +2,7 @@ import subprocess
 import sys
 from lib.constants import URL, WSS, SCREENSHOT_PATH
 
-def getLogo(title: str, compress: bool = True, format_img: bool = True):
+def getLogo(title: str, compress: bool = True):
     # Logo webpage interprets underscores in URL argument as spaces.
     title = title.replace(" ", "_")
 
@@ -11,10 +11,6 @@ def getLogo(title: str, compress: bool = True, format_img: bool = True):
     if retcode != 0:
         sys.stderr.write(f"[ERROR]: wss exit code {retcode}")
         sys.exit(1)
-
-    # if format_img:
-        # _cropLogo(SCREENSHOT_PATH)
-        # _addBorder(SCREENSHOT_PATH)
     if compress:
         _compressPng(SCREENSHOT_PATH)
 
