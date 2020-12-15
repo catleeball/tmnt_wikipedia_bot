@@ -3,3 +3,9 @@
 logos/
 .keys
 *.png
+keys.py
+bin/
+build/
+lib/python3.8/
+lib64
+share/
